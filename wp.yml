@@ -1,0 +1,88 @@
+---
+- name: Ansible deploy wordpress with docker
+  hosts: localhost
+  gather_facts: no
+
+  vars_files:
+    - env.yml
+    - pass.yml
+
+  vars:
+    initialize_wp: false
+
+  tasks:
+    - debug:
+        msg: "{{ initialize_wp }}"
+
+    - include_tasks: new_wp_version.yml
+      when: initialize_wp  
+
+    - name: Generate config file for nginx
+      template:
+        src: ./templates/nginx.conf.j2
+        dest: ./nginx.conf
+
+    - name: Create a network for containers
+      docker_network:
+        name: "{{ docker_network }}"
+
+    - name: Create if not exist volume dbdata
+      docker_volume:
+        name: "{{ db_volume }}"
+
+    - name: Launch database container
+      docker_container:
+        name: "{{ db_name }}"
+        image: mysql:{{ MYSQL_VERSION }}
+        restart: yes
+        detach: yes
+        state: started
+        env:
+          MYSQL_ROOT_PASSWORD: "{{ MYSQL_ROOT_PASSWORD }}"
+          MYSQL_USER: "{{ MYSQL_USER }}"
+          MYSQL_PASSWORD: "{{ MYSQL_PASSWORD }}"
+          MYSQL_DATABASE: "{{ MYSQL_DATABASE }}"
+        volumes:
+          - "{{ db_volume }}:/var/lib/mysql"
+        command: --default-authentication-plugin=mysql_native_password
+        network_mode: "{{ docker_network }}"
+
+    - name: Create php image
+      docker_image:
+        name: "{{ php_name }}"
+        source: build
+        build:
+          path: ./php
+          args:
+            PHP_VERSION: "{{ PHP_VERSION }}"
+        force_source: yes
+
+    - name: Launch php container
+      docker_container:
+        name: "{{ php_name }}"
+        image: "{{ php_name }}"
+        restart: yes
+        volumes:
+          - "{{ wp_volume }}:/var/www/html"
+        network_mode: "{{ docker_network }}"
+        state: started
+
+    - name: Launch nginx container
+      docker_container:
+        name: "{{ nginx_name }}"
+        image: nginx:{{ NGINX_VERSION }}
+        restart: yes
+        volumes:
+          - "{{ wp_volume }}:/var/www/html"
+          - "./nginx.conf:/etc/nginx/conf.d/default.conf"
+        ports:
+          - "8082:80"
+        links:
+          - "{{ php_name }}"
+        network_mode: "{{ docker_network }}"
+        state: started
+
+    - name: Delete temporary nginx conf
+      file:
+        path: ./nginx.conf
+        state: absent

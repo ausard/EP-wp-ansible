@@ -1,0 +1,28 @@
+- name: Recursively remove directory with old files
+  file:
+    path: "{{ wp_volume }}"
+    state: absent
+
+- name: Download latest version of wordpress
+  get_url:
+    url: https://wordpress.org/latest.tar.gz
+    dest: ./wordpress.tar.gz
+
+- name: Create a directory if it does not exist
+  file:
+    path: "{{ wp_volume }}"
+    state: directory
+    mode: "0777"
+
+- name: Extract wordpress site to our wp_volume
+  shell: tar --wildcards -xzf wordpress.tar.gz "wordpress/*" -C "{{ wp_volume }}"
+
+- name: Copy config file for wordpress
+  template:
+    src: ./templates/wp-config.php.j2
+    dest: "{{ wp_volume }}/wp-config.php"
+
+- name: Delete archive file
+  file:
+    path: ./wordpress.tar.gz
+    state: absent
