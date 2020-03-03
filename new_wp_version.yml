@@ -16,13 +16,13 @@
 
 - name: Extract wordpress site to our wp_volume
   shell: |
-    tar --wildcards -xzf wordpress.tar.gz "wordpress/*" -C {{ wp_volume }}
+    tar --wildcards -xzf wordpress.tar.gz -C {{ wp_volume }}
     exit 0
 
 - name: Copy config file for wordpress
   template:
     src: ./templates/wp-config.php.j2
-    dest: "{{ wp_volume }}/wp-config.php"
+    dest: "{{ wp_volume }}/wordpress/wp-config.php"
 
 - name: Delete archive file
   file:
