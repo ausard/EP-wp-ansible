@@ -7,13 +7,10 @@
     - env.yml
     - pass.yml
 
-  vars:
-    initialize_wp: false
+  # vars:
+  #   initialize_wp: false
 
   tasks:
-    - debug:
-        msg: "{{ initialize_wp }}"
-
     - include_tasks: new_wp_version.yml
       when: initialize_wp  
 
