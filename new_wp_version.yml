@@ -15,7 +15,7 @@
     mode: "0777"
 
 - name: Extract wordpress site to our wp_volume
-  shell: tar --wildcards -xzf wordpress.tar.gz "wordpress/*" -C {{ wp_volume }}
+  shell: tar --wildcards -xzf wordpress.tar.gz "wordpress/*" -C "{{ wp_volume }}"
 
 - name: Copy config file for wordpress
   template:
