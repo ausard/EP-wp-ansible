@@ -22,7 +22,7 @@ pipeline {
             //             sh  "ansible-playbook --vault-password-file=vault_password wp.yml"
             //         }
             //     }
-            // }
+            }
           }
           post{              
               success{
