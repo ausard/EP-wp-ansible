@@ -12,7 +12,7 @@ pipeline {
             dir("/tmp/wp_ans"){
             //    sh "rm -rf *"
                git 'https://github.com/ausard/ansible_wordpress_docker.git'
-               sh "docker stop $(docker ps -q)"              
+               sh "docker stop '$(docker ps -q)'"              
                script {
                     if (params.initial) {
                         sh "ansible-playbook --vault-password-file=vault_password wp.yml --extra-vars 'initialize_wp=true'"
