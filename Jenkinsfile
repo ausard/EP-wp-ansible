@@ -8,9 +8,15 @@ pipeline {
    stages {
       stage("Deploy wordpress with ansible"){
           steps{
-              echo "====++++executing Deploy wordpress with ansible++++===="
-              echo "Hello ${params.init_new_wp}"
-
+            echo "====++++executing Deploy wordpress with ansible++++===="
+            echo "Hello ${params.init_new_wp}"
+            script {
+                if (params.init_new_wp) {
+                    echo 'I only execute on the master branch'
+                    } else {
+                        echo 'I execute elsewhere'
+                    }
+            }  
           }
           post{
               always{
