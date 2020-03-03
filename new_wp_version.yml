@@ -1,3 +1,11 @@
+- name: dokcer container stop
+  docker_container:
+    name: 
+      - "{{ db_name }}"
+      - "{{ php_name }}"
+      - "{{ nginx_name }}"
+    state: stopped
+
 - name: Recursively remove directory with old files
   file:
     path: "{{ wp_volume }}"
