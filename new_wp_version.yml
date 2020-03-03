@@ -2,7 +2,7 @@
   docker_container:
     name: "{{ db_name }}"
     state: stopped
-    
+
 - name: dokcer container stop
   docker_container:
     name: "{{ php_name }}"
@@ -12,6 +12,7 @@
   docker_container:
     name: "{{ nginx_name }}"
     state: stopped
+    
 - name: Recursively remove directory with old files
   file:
     path: "{{ wp_volume }}"
@@ -27,6 +28,8 @@
     path: "{{ wp_volume }}"
     state: directory
     mode: "0777"
+    owner: jenkins
+    group: jenkins
 
 - name: Extract wordpress site to our wp_volume
   shell: |
