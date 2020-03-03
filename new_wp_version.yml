@@ -1,5 +1,4 @@
 
-
 - name: Recursively remove directory with old files
   file:
     path: "{{ wp_volume }}"
