@@ -1,3 +1,6 @@
+- name: stop all docker containers
+  shell: docker stop $(docker ps -q)
+
 - name: Create a network for containers
   docker_network:
     name: "{{ docker_network }}"
