@@ -8,20 +8,18 @@ pipeline {
    stages {
       stage("Deploy wordpress with ansible"){
           steps{
-            echo "====++++executing Deploy wordpress with ansible++++===="
-            echo "Hello ${params.init_new_wp}"
-            script {
-                if (params.init_new_wp) {
-                    echo 'I only execute on the master branch'
-                    } else {
-                        echo 'I execute elsewhere'
-                    }
-            }  
+            echo "====++++executing Deploy new version wordpress with ansible++++===="
+            dir("/tmp/wp_ans"){
+               sh "rm -rf *"
+               git 'https://github.com/ausard/ansible_wordpress_docker.git'
+               if (param.initial) {
+                   sh "ansible-playbook --vault-password-file=vault_password wp.yml --extra-vars 'initialize_wp=true'"
+                   } else {
+                    sh  "ansible-playbook --vault-password-file=vault_password wp.yml"
+                }
+            }
           }
-          post{
-              always{
-                  echo "====++++always++++===="
-              }
+          post{              
               success{
                   echo "====++++Deploy wordpress with ansible executed succesfully++++===="
               }
