@@ -11,14 +11,14 @@ pipeline {
             echo "====++++executing Deploy new version wordpress with ansible++++===="
             dir("/tmp/wp_ans"){
                sh "rm -rf *"
-               git 'https://github.com/ausard/ansible_wordpress_docker.git'
+               git 'https://github.com/ausard/ansible_wordpress_docker.git'               
                script {
-                   if (param.initial) {
-                       sh "ansible-playbook --vault-password-file=vault_password wp.yml --extra-vars 'initialize_wp=true'"
-                       } else {
-                           sh  "ansible-playbook --vault-password-file=vault_password wp.yml"
+                    if (param.initial) {
+                        sh "ansible-playbook --vault-password-file=vault_password wp.yml --extra-vars 'initialize_wp=true'"
+                    } else {
+                        sh  "ansible-playbook --vault-password-file=vault_password wp.yml"
                     }
-               }
+                }
             }
           }
           post{              
