@@ -10,7 +10,7 @@ pipeline {
           steps{
             echo "====++++executing Deploy new version wordpress with ansible++++===="
             dir("/tmp/wp_ans"){
-               sh "rm -rf *"
+            //    sh "rm -rf *"
                git 'https://github.com/ausard/ansible_wordpress_docker.git'
                script {
                     if (params.initial) {
