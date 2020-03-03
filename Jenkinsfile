@@ -12,11 +12,13 @@ pipeline {
             dir("/tmp/wp_ans"){
                sh "rm -rf *"
                git 'https://github.com/ausard/ansible_wordpress_docker.git'
-               if (param.initial) {
-                   sh "ansible-playbook --vault-password-file=vault_password wp.yml --extra-vars 'initialize_wp=true'"
-                   } else {
-                    sh  "ansible-playbook --vault-password-file=vault_password wp.yml"
-                }
+               script {
+                   if (param.initial) {
+                       sh "ansible-playbook --vault-password-file=vault_password wp.yml --extra-vars 'initialize_wp=true'"
+                       } else {
+                           sh  "ansible-playbook --vault-password-file=vault_password wp.yml"
+                    }
+               }
             }
           }
           post{              
