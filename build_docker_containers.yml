@@ -43,6 +43,11 @@
     network_mode: "{{ docker_network }}"
     state: started
 
+- name: Generate config file for nginx
+  template:
+    src: ./templates/nginx.conf.j2
+    dest: ./nginx.conf
+
 - name: Launch nginx container
   docker_container:
     name: "{{ nginx_name }}"

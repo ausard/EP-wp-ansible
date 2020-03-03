@@ -1,8 +1,7 @@
 ---
 - name: Ansible deploy wordpress with docker
   hosts: localhost
-  # gather_facts: no
-
+  gather_facts: no
 
   vars_files:
     - env.yml
@@ -13,14 +12,5 @@
     - include_tasks: new_wp_version.yml
       when: initialize_wp
 
-    - name: Generate config file for nginx
-      template:
-        src: ./templates/nginx.conf.j2
-        dest: ./nginx.conf
-
     - include_tasks: build_docker_containers.yml
 
-    - name: Delete temporary nginx conf
-      file:
-        path: ./nginx.conf
-        state: absent
