@@ -15,58 +15,57 @@ File  [Dockerfile](hhttps://github.com/ausard/ansible_wordpress_docker/blob/mast
 Folder [tasks](https://github.com/ausard/ansible_wordpress_docker/tree/master/tasks) - main tasks deploying
 
 
-.env : file contains variables for docker-compose file
-
-Jenkinsfile : files for pipeline job in Jenkins  
+Jenkinsfile : file for pipeline job in Jenkins  
 
 
-### docker-compose.yml - YAML file to configure our application’s services :  
+### tasks/build_docker_containers.yml -  file to configure our application’s services :  
 
 #### Service database management system to store and manage the data for our site: mysql
 ```
-db:
-    image: mysql:${MYSQL_VERSION:-latest}
-    container_name: db
-    restart: always
-    env_file: .env
+- name: Launch database container
+  docker_container:
+    name: "{{ db_name }}"
+    image: mysql:{{ MYSQL_VERSION }}
+    restart: yes
+    detach: yes
+    state: started
+    env:
+      MYSQL_ROOT_PASSWORD: "{{ MYSQL_ROOT_PASSWORD }}"
+      MYSQL_USER: "{{ MYSQL_USER }}"
+      MYSQL_PASSWORD: "{{ MYSQL_PASSWORD }}"
+      MYSQL_DATABASE: "{{ MYSQL_DATABASE }}"
     volumes:
-      - dbdata:/var/lib/mysql
-    command: '--default-authentication-plugin=mysql_native_password'
-    networks:
-      - wp_network
+      - "{{ db_volume }}:/var/lib/mysql"
+    command: --default-authentication-plugin=mysql_native_password
+    network_mode: "{{ docker_network }}"
+
 ```
 #### Service PHP-FPM is an implementation of Fast-CGI for PHP with improved capabilities around process management, logging, and high traffic situations:
 ```
-php-fpm:
-    build:
-      context: ./php
-      dockerfile: Dockerfile
-      args:
-        - PHP_VERSION=${PHP_VERSION:-php:7.4-fpm}      
-    container_name: php-fpm    
+- name: Launch php container
+  docker_container:
+    name: "{{ php_name }}"
+    image: "{{ php_name }}"
+    restart: yes
     volumes:
-      - ${wp_volume}:/var/www/html
-    depends_on:
-      - db
-    networks:
-      - wp_network
-    restart: always
+      - "{{ wp_volume }}/wordpress:/var/www/html"
+    network_mode: "{{ docker_network }}"
+    state: started
 ```
 #### Service nginx:  send requests for .php routes to PHP-FPM to serve the page.
 ```
-nginx:
-    depends_on:
-      - php-fpm
-    image: nginx:${NGINX_VERSION:-latest}
-    container_name: nginx
-    restart: always
-    ports:
-      - "8082:80"
-    volumes:
-      - ${wp_volume}:/var/www/html      
-      - ./nginx-conf/nginx.conf:/etc/nginx/conf.d/default.conf
-    networks:
-      - wp_network
-    links:
-      - php-fpm
+name: Launch nginx container
+ docker_container:
+   name: "{{ nginx_name }}"
+   image: nginx:{{ NGINX_VERSION }}
+   restart: yes
+   volumes:
+     - "{{ wp_volume }}/wordpress:/var/www/html"
+     - "./nginx.conf:/etc/nginx/conf.d/default.conf"
+   ports:
+     - "8082:80"
+   links:
+     - "{{ php_name }}"
+   network_mode: "{{ docker_network }}"
+   state: started
 ```
