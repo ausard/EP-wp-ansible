@@ -12,4 +12,4 @@ ansible:
 	ansible-playbook --vault-password-file=vault_password wp.yml 
 
 stop:
-	docker stop $(<docker ps -q)
+	docker stop $(< docker ps -q)

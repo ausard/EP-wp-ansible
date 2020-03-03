@@ -26,12 +26,12 @@
 - name: Create php image
   docker_image:
     name: "{{ php_name }}"
-    source: build
     build:
       path: ./php
       args:
         PHP_VERSION: "{{ PHP_VERSION }}"
     force_source: yes
+    source: build
 
 - name: Launch php container
   docker_container:

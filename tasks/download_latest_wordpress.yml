@@ -15,8 +15,6 @@
     state: directory
     recurse: yes
     mode: "0777"
-    owner: jenkins
-    group: jenkins
 
 - name: Extract wordpress site to our wp_volume
   shell: |

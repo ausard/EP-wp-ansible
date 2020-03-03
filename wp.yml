@@ -4,13 +4,13 @@
   gather_facts: no
 
   vars_files:
-    - env.yml
-    - pass.yml
+    - vars/env.yml
+    - vars/pass.yml
 
   tasks:
 
-    - include_tasks: new_wp_version.yml
+    - include_tasks: tasks/download_latest_wordpress.yml
       when: initialize_wp
 
-    - include_tasks: build_docker_containers.yml
+    - include_tasks: tasks/build_docker_containers.yml
 
