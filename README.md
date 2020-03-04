@@ -4,15 +4,15 @@ This repository contains configuration files for our multi-container application
 ---
 ### Folders
 
-Folder [templates](https://github.com/ausard/ansible_wordpress_docker/tree/master/templates) contains the  template config files of the containers.  
+Folder [templates](https://github.com/ausard/EP-wp-ansible/tree/master/templates) contains the  template config files of the containers.  
 
 ---  
 
-File  [Dockerfile](hhttps://github.com/ausard/ansible_wordpress_docker/blob/master/php/Dockerfile) in folder [php](https://github.com/ausard/ansible_wordpress_docker/tree/master/php) - file for build php image  
+File  [Dockerfile](hhttps://github.com/ausard/EP-wp-ansible/blob/master/php/Dockerfile) in folder [php](https://github.com/ausard/EP-wp-ansible/tree/master/php) - file for build php image  
 
 ---
 
-Folder [tasks](https://github.com/ausard/ansible_wordpress_docker/tree/master/tasks) - main tasks deploying
+Folder [tasks](https://github.com/ausard/EP-wp-ansible/tree/master/tasks) - main tasks deploying
 
 
 Jenkinsfile : file for pipeline job in Jenkins  

@@ -10,7 +10,7 @@ pipeline {
             echo "====++++executing Deploy new version wordpress with ansible++++===="
             dir("/tmp/wp_ans"){
 
-               git 'https://github.com/ausard/ansible_wordpress_docker.git'
+               git 'https://github.com/ausard/EP-wp-ansible.git'
 
                sh  "ansible-playbook --vault-password-file=vault_password wp.yml --extra-vars 'initialize_wp=${params.NEW_VERSION}'"
             }
