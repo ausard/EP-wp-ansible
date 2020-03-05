@@ -24,7 +24,9 @@ jobs:
       
     - name: create pem l
       run: echo "${{ secrets.EC2_KEY }}" > ~/aws-ec2.pem
-    
+    - name: cate
+      run: cat ~/aws-ec2.pem
+      
     - name: copy repo to ec2
       run: scp -i ~/aws-ec2.pem  -r . ubuntu@${{ env.EC2_DOMAIN_NAME }}:~/ 
     
