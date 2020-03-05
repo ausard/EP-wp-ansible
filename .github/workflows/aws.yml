@@ -27,7 +27,7 @@ jobs:
         aws-region: ${{ env.AWS_REGION_NAME }}
     
     - name: copy to s3 bucket repo
-      run: aws s3 cp ~/ s3://${{ env.AWS_S3_BUCKET_NAME }}/
+      run: aws s3 cp ./ s3://${{ env.AWS_S3_BUCKET_NAME }}/
       
       
       
