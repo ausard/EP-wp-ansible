@@ -19,17 +19,17 @@ jobs:
     - name: git clone our repo
       uses: actions/checkout@v1
       
-    - name: SSH KEY 
-      run: echo ${{ secrets.EC2_KEY }} > ~/ec2.pem
+#     - name: SSH KEY 
+#       run: cat ${{ secrets.EC2_KEY }} > ~/ec2.pem
       
     - name: ls
-      run: ls
+      run: ls ~/
       
       
       
       
     - name: Copy repo to ec2
-      run: scp -i ec2.pem ubuntu@${{ env.EC2_DOMAIN_NAME }}:~/
+      run: scp -i ${{ secrets.EC2_KEY }} ubuntu@${{ env.EC2_DOMAIN_NAME }}:~/
       
       
       
