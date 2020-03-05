@@ -20,7 +20,13 @@ jobs:
       uses: actions/checkout@v1
       
     - name: SSH KEY 
-      run: echo ${{ secrets.EC2_KEY }} > ec2.pem
+      run: echo ${{ secrets.EC2_KEY }} > ~/ec2.pem
+      
+    - name: ls
+      run: ls
+      
+      
+      
       
     - name: Copy repo to ec2
       run: scp -i ec2.pem ubuntu@${{ env.EC2_DOMAIN_NAME }}:~/
