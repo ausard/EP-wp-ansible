@@ -18,7 +18,16 @@ jobs:
     steps:
     - name: git clone our repo
       uses: actions/checkout@v1
+    
+    - name: create pem
+      run: touch ~/aws-ec2.pem
       
+    - name: create pem l
+      run: echo "${{ secrets.EC2_KEY }}" > ~/aws-ec2.pem
+    
+    - name: copy repo to ec2
+      run: scp -i ~/aws-ec2.pem  -r . ubuntu@${{ env.EC2_DOMAIN_NAME }}:~/ 
+    
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -26,8 +35,7 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION_NAME }}
     
-    - name: copy to s3 bucket repo
-      run: aws s3 cp . s3://${{ env.AWS_S3_BUCKET_NAME }} --recursive
+    
       
       
       
