@@ -19,17 +19,20 @@ jobs:
     - name: git clone our repo
       uses: actions/checkout@v1
     
-    - name: create pem
-      run: touch ~/aws-ec2.pem
+     
+
       
-    - name: create pem l
-      run: echo "${{ secrets.EC2_KEY }}" > ~/aws-ec2.pem
-    - name: cate
-      run: cat ~/aws-ec2.pem
+
+    - name: Clone a remote repo
+      env:
+        DEPLOY_KEY: ${{ secrets.EC2_KEY }}
+      run: |
+        eval "$(ssh-agent -s)"
+        ssh-add - <<< "${DEPLOY_KEY}"
+        scp -r . ubuntu@${{ env.EC2_DOMAIN_NAME }}:~/ 
       
-    - name: copy repo to ec2
-      run: scp -i ~/aws-ec2.pem  -r . ubuntu@${{ env.EC2_DOMAIN_NAME }}:~/ 
-    
+        
+        
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
